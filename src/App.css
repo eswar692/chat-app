@@ -1,0 +1,4 @@
+.tab-trigger-auth-page{
+    @apply data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-b-blue-300 
+                    data-[state=active]:rounded-none mt-3
+}
