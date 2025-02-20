@@ -6,6 +6,9 @@ import { toast } from 'sonner'
 import {apiClient} from '../utils/api'
 import {register_route} from '../utils/constant'
 import axios from 'axios'
+import {useStore} from '../srtores/strore'
+
+
 
 
 
@@ -14,6 +17,9 @@ const Auth = () => {
 
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
+    const {setUserInfo,userInfo} = useStore()
+    const [emailSignup, setEmailSignup] = useState('')
+    const [passwordsignup, setPasswordsignup] = useState('')
 
     const loginField = ()=>{
       
@@ -27,19 +33,50 @@ const Auth = () => {
       }
       return true
     }
-    const  loginHandler = async (e)=>{
+    const signup = ()=>{
+      
+      if(!emailSignup.length){
+        toast('email is required')
+        return false
+      }
+      if(!passwordsignup.length){
+        toast('password is required')
+        return false
+      }
+      return true
+    }
+    const  signupHandler = async (e)=>{
        e.preventDefault();
 
       if (loginField() ){
-        const api = await apiClient.post('/user/signup',{email,password})
+        const api = await axios.post('http://localhost:3000/user/signup',{emailSignup,passwordsignup},{ withCredentials: true })
         console.log(api.data)
+     
+        setEmailSignup('')
+        setPasswordsignup('')
+
       }
+    }
+
+    const loginHandler = async(e)=>{
+      e.preventDefault();
+      if (signup){
+       
+        const api = await axios.post('http://localhost:3000/user/login',{email,password},{ withCredentials: true })
+        
+       
+
+        setEmail('')
+        setPassword('')
+
+      }
+
     }
 
     
     
   return (
-    <div className="flex items-center justify-center w-full h-[100vh] flex bg-[url('images/27129.jpg')] bg-cover bg-center">
+    <div className="flex items-center justify-center w-full h-[100vh]  bg-[url('images/27129.jpg')] bg-cover bg-center">
       <div className='flex '>
         <div className='w-[50vh] h-[70vh] shadow-2xl md:rounded-l-lg   sm:w-[350px] sm:h-[400px] bg-white'>
             <div className='flex justify-center flex-col'>
@@ -61,7 +98,8 @@ const Auth = () => {
                         <form  className='flex h-full items-center justify-center flex-col sm:gap-10 gap-5 mt-5' >
                             <Input 
                             type="email" 
-                            
+                            name='email'
+                            autoComplete='email'
                             placeholder="Enter Email"
                             value={email}
                             onChange={(e)=>{setEmail(e.target.value)}}
@@ -74,7 +112,7 @@ const Auth = () => {
                             onChange={(e)=>{setPassword(e.target.value)}}
                             className=" w-[80%] h-[6vh] border-2 border-gray-400"/>
 
-                            <Button type='submit'  className=" w-[80%] h-[6vh] ">Submit</Button>
+                            <Button type='submit' onClick={loginHandler} className=" w-[80%] h-[6vh] ">Submit</Button>
                         </form>
                 </TabsContent>
                 <TabsContent 
@@ -82,29 +120,29 @@ const Auth = () => {
                 className="w-full ">
                     
                 <form className='flex h-full items-center justify-center flex-col sm:gap-5 gap-3 mt-4' >
-                            
+{/*                             
                             <Input 
                             type="user" 
                             placeholder="Enter your Name"
                             value={email}
                             onChange={(e)=>{setEmail(e.target.value)}}
-                            className="w-[80%] sm:h-[6vh] h-[7vh] text-[13px] sm:border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+                            className="w-[80%] sm:h-[6vh] h-[7vh] text-[13px] sm:border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"/> */}
                             
                             <Input 
                             type="email" 
                             placeholder="Enter Email"
-                            value={email}
-                            onChange={(e)=>{setEmail(e.target.value)}}
+                            value={emailSignup}
+                            onChange={(e)=>{setEmailSignup(e.target.value)}}
                             className="w-[80%] h-[6vh] border-2 border-gray-400"/>
                             
                             <Input 
                             type="password" 
                             placeholder="Enter Password"
-                            value={password}
-                            onChange={(e)=>{setPassword(e.target.value)}}
+                            value={passwordsignup}
+                            onChange={(e)=>{setPasswordsignup(e.target.value)}}
                             className=" w-[80%] h-[6vh] border-2 border-gray-400"/>
 
-                            <Button onClick={loginHandler} className=" w-[80%] h-[6vh] ">Submit</Button>
+                            <Button onClick={signupHandler} className=" w-[80%] h-[6vh] ">Submit</Button>
                         </form>
                 </TabsContent>
               </Tabs>
