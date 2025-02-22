@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import {apiClient} from '../utils/api'
 import {register_route} from '../utils/constant'
 import axios from 'axios'
-import {useStore} from '../srtores/strore'
+
 
 
 
@@ -17,7 +17,7 @@ const Auth = () => {
 
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
-    const {setUserInfo,userInfo} = useStore()
+
     const [emailSignup, setEmailSignup] = useState('')
     const [passwordsignup, setPasswordsignup] = useState('')
 

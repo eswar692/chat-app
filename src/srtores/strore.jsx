@@ -1,10 +1,31 @@
+import { configureStore, createSlice } from "@reduxjs/toolkit";
 
 
-import {create}  from 'zustand';
+// User Slice
+const userSlice = createSlice({
+  name: "user",
+  initialState: {
+    userInfo: null, // Store user details
+  },
+  reducers: {
+    // setUserInfo: (state, action) => {
+    //   state.userInfo = action.payload;
+    // },
+    setUserInfo: (state, action) => {
+      return { ...state, userInfo: action.payload }; // ✅ Immutable update
+    }
+    
+  },
+});
 
-export const useStore = create((set) => ({
-    userInfo: 'hi',
-    setUserInfo: (userInfo) => set({ userInfo }),
-}));
+// Export actions
+export const { setUserInfo }  = userSlice.actions;
+
+// Create store
+export const store = configureStore({
+  reducer: {
+    user: userSlice.reducer,
+  },
+});
 
 

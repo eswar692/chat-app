@@ -4,13 +4,19 @@ import './index.css'
 import App from './App.jsx'
 import './App.css'
 import { Toaster } from '@/components/ui/sonner'
+import { Provider } from "react-redux";
+import {store} from'./srtores/strore'
 
 createRoot(document.getElementById('root')).render(
   
   <>
   <StrictMode>
-    <App />
-    <Toaster closeButton title
+
+    <Provider store={store}>
+      <App/>
+    </Provider>
+    
+    {/* <Toaster closeButton title
   theme="light"
   position="bottom-left"
   toastOptions={{
@@ -21,7 +27,7 @@ createRoot(document.getElementById('root')).render(
       closeButton: "text-black hover:text-red-400",
     },
   }}
-/>
+/> */}
   </StrictMode>
   
   </>
