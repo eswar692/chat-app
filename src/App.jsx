@@ -4,8 +4,10 @@ import {BrowserRouter,Routes, Route, Navigate} from 'react-router-dom'
 import Auth from './pages/Auth'
 import Chat from './pages/Chat'
 import axios from 'axios'
-import { setUserInfo } from './srtores/strore'
+
 import { useSelector,useDispatch } from 'react-redux'
+import { fetchUser } from './srtores/apiSlice'
+import Profile from './pages/Profile'
 
 
 
@@ -14,56 +16,38 @@ import { useSelector,useDispatch } from 'react-redux'
 
 const App = () => {
 
-        const userInfo = useSelector((state)=>state.user.userInfo)
 
-        const dispatch = useDispatch()
-        const [isDataFetched, setIsDataFetched] = useState(false);
+  const {userInfo,loading} = useSelector((state)=>state.auth)
+  const dispatch = useDispatch()
 
-        const PrivateRoutes = ({children})=>{
-         
-           const userInfo = useSelector((state) => (isDataFetched ? state.user.userInfo : null));
-          console.log("checjed",userInfo)
-            const isAuth = !!userInfo
-           return  isAuth ? children : <Navigate to='/auth' replace/>
-        }
+        useEffect(()=>{
+          dispatch(fetchUser())
+    
+        },[dispatch])   
+        console.log(userInfo)
+        
+
+      
 
         
 
   
-    useEffect(()=>{
-      
-      const fetchData = async ()=>{
-
-        
-             try {
-                          const response = await axios.get('http://localhost:3000/user/get-data-token',{ withCredentials: true })
-                    const data = response.data
-                    
-                  if (data) {
-                    dispatch(setUserInfo(data))
-                    // console.log(data  )
-                    setIsDataFetched(true)
-                    
-                  
-                  } else {
-                    console.log('error in fetching data through token')
-                  }
-            } catch (error) {
-              console.log(error)
-                
-           }
-        
-       }
-       
-                
-    
-            
-
-      fetchData()
-    },[JSON.stringify(dispatch)])
-
     
 
+    const ProfileRoutes = ({children})=>{
+         
+      if(loading){
+        return <h1>loading ....</h1>
+      }
+     
+      return  userInfo.email
+       ? (userInfo.profileSetup ? <Navigate to='/chat'/> :<Navigate to='/profile'/>)
+       : <Navigate to='/auth' replace/>
+   }
+   const ChatRoutes = ({children})=>{
+    return userInfo.profileSetup ? children : <Navigate to="/profile" />
+
+   }
     
   
   
@@ -73,10 +57,11 @@ const App = () => {
       <Routes>
         <Route path='/auth' element={<Auth/>} />
         <Route path='/chat' element={
-          <PrivateRoutes>
+          <ProfileRoutes>
             <Chat/>
-          </PrivateRoutes>
+          </ProfileRoutes>
         } />
+        <Route path='/profile' element={<Profile/>} />
         <Route path='*' element={<Navigate to='/auth'/>} />
       </Routes>
     
