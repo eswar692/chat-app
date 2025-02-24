@@ -9,7 +9,7 @@ const Chat = ()=>{
   
  
   useEffect(()=>{
-     if(!userInfo.profileSetup){
+     if(userInfo.profileSetup===false){
       return navigate('/profile')
     }
   },[userInfo])
