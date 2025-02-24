@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import {apiClient} from '../utils/api'
 import {register_route} from '../utils/constant'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 
 
@@ -14,6 +15,7 @@ import axios from 'axios'
 
 
 const Auth = () => {
+    const navigate = useNavigate()
 
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
@@ -54,6 +56,7 @@ const Auth = () => {
      
         setEmailSignup('')
         setPasswordsignup('')
+        navigate('/chat')
 
       }
     }

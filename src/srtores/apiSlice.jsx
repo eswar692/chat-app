@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios'
 
 // API Call Using createAsyncThunk
-export const fetchUser = createAsyncThunk("auth/fetchUser", async (_,{rejectWithValue}) => {
+export const fetchUser = createAsyncThunk("auth/fetchUser", async (_,rejectWithValue) => {
   try {
     const response = await axios.get('http://localhost:3000/user/get-data-token',{ withCredentials: true })
     const data = response.data
@@ -47,7 +47,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchUser.rejected, (state,action) => {
         state.userInfo = action.payload;
-        state.loading = false;
+        state.loading = null;
 
        
       });
