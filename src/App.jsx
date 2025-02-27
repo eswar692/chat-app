@@ -4,6 +4,8 @@ import {BrowserRouter,Routes, Route, Navigate, useLocation} from 'react-router-d
 import Auth from './pages/Auth'
 import Chat from './pages/Chat'
 import axios from 'axios'
+import Loading from './my/Loding'
+
 
 import { useSelector,useDispatch } from 'react-redux'
 import { fetchUser } from './srtores/apiSlice'
@@ -12,7 +14,7 @@ import Profile from './pages/Profile'
 const ProfileRoutes = ({children})=>{
   const {userInfo,loading} = useSelector((state)=>state.auth)
   if(loading){
-    return 
+    return <Loading/>
   }else if (userInfo){
     return  children
   }else{
@@ -28,7 +30,7 @@ const ProfileRoutes = ({children})=>{
 const AuthRoutes = ({children})=>{
   const {userInfo,loading} = useSelector((state)=>state.auth)
   if(loading){
-    return 
+    return <Loading/>
   }else if (userInfo){
     return  <Navigate to='/chat'/>
   }else{

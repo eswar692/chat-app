@@ -56,15 +56,26 @@ const redirectChat = ()=>{
 const ClickImagePicker = ()=>{
   imageRef.current.click()
 }
-const imageHandler = (e)=>{
+const imageHandler = async(e)=>{
   const file = e.target.files[0]
-  const imageUrl = URL.createObjectURL(file)
-  if(file){
-    setImage(imageUrl)
+  try {
+    if(file){
+      const formData = new FormData()
+      formData.append('image',file)
+      const response = await axios.post('http://localhost:3000/user/upload-image',{formData},{withCredentials:true})
+      const data = response.data
+      console.log(data)
+    }
+  } catch (error) {
+    console.error(error)
   }
 }
-const deleteImage = ()=>{
-  setImage('')
+const deleteImage = async()=>{
+  alert('Do You want Delete Profile Image')
+  const response = await axios.delete('http://localhost:3000/user/delete-profile-image',{withCredentials:true})
+  const data = response.data
+  console.log(data)
+  
 }
 
   
@@ -86,12 +97,12 @@ const deleteImage = ()=>{
                 onMouseEnter={()=>setHovered(true)}
                 onMouseLeave={()=>setHovered(false)}>
                     
-              <Avatar className='w-20 h-20'>
+              <Avatar className='w-36 h-36'>
               {
-                image
+                userInfo.image
                 ?(
                   <AvatarImage 
-                  src={image} 
+                  src={userInfo.image} 
                   alt='profile pic'
                   className='w-full h-full rounded-full '
                   />
@@ -110,7 +121,7 @@ const deleteImage = ()=>{
                
                 {hovered && (
                  <div className='w-20 h-20 bg-black/15 rounded-full flex justify-center items-center'>
-                   {(image 
+                   {(userInfo.image 
                     ? <Trash2 onClick={deleteImage} className='   text-white font-[5px]' /> 
                     :<Plus onClick={ClickImagePicker} className='   text-white font-[5px]'/>)}
                  </div>
