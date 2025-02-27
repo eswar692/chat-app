@@ -2,11 +2,11 @@ import React,{useState} from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { Button } from '@/components/ui/button'
-import { toast } from 'sonner'
 import {apiClient} from '../utils/api'
 import {register_route} from '../utils/constant'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { toastError } from '@/utils/tosts'
 
 
 
@@ -50,9 +50,10 @@ const Auth = () => {
     const  signupHandler = async (e)=>{
        e.preventDefault();
 
-      if (loginField() ){
+      if (signup){
         const api = await axios.post('http://localhost:3000/user/signup',{emailSignup,passwordsignup},{ withCredentials: true })
         console.log(api.data)
+        if(api)
      
         setEmailSignup('')
         setPasswordsignup('')
@@ -63,15 +64,24 @@ const Auth = () => {
 
     const loginHandler = async(e)=>{
       e.preventDefault();
-      if (signup){
+      try {
+        if (loginField()){
        
-        const api = await axios.post('http://localhost:3000/user/login',{email,password},{ withCredentials: true })
+          const api = await axios.post('http://localhost:3000/user/login',{email,password},{ withCredentials: true })
+          if(api.data.email){
+            console.log(api.data)
+            toast.success('Login Successfully')
+            navigate('/chat')
+          }
+          setEmail('')
+          setPassword('')  
+        }
         
-       
-
-        setEmail('')
-        setPassword('')
-
+      } catch (error) {
+        console.log(error)
+        if(error){
+          toastError('incorrect Password and user Id try again')
+        }
       }
 
     }

@@ -16,15 +16,15 @@ createRoot(document.getElementById('root')).render(
       <App/>
     </Provider>
     
-    <Toaster closeButton title
+    <Toaster  title
       theme="light"
-      position="bottom-left"
+      position="top-right"
       toastOptions={{
        classNames: {
-          toast: "bg-white text-red-500 shadow-lg h-[5vh] border-r-[2px] border-r-red-500 rounded-[2px] ",
-          title: "text-[10px] font-bold text-center ",
-          description: "text-gray-300",
-          closeButton: "text-black hover:text-red-400",
+          // toast: "bg-white text-red-500 shadow-lg h-[5vh] border-r-[2px] border-r-red-500 rounded-[2px] ",
+          // title: "text-[10px] font-bold text-center ",
+          // description: "text-gray-300",
+          // closeButton: "",
         },
       }}
     />

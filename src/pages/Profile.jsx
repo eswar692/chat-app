@@ -127,7 +127,7 @@ const deleteImage = ()=>{
                type="file"
                ref={imageRef}
                onChange={imageHandler}
-               accept=".jpg, .png, .jpeg, .webp"
+               accept=".jpg,  .png, .jpeg, .webp"
                className='hidden'
                 />
 
