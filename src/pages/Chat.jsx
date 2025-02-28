@@ -2,6 +2,7 @@ import React,{useEffect,useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector,useDispatch } from 'react-redux'
 import Loading from '@/my/Loding'
+import ChatLayout from '@/chat/main/layout'
 
 const Chat = ()=>{
   const navigate = useNavigate()
@@ -20,7 +21,7 @@ const Chat = ()=>{
     <div>
       
       {loading && <h2>best loading......</h2>}
-      {userInfo?.email && <h2>{userInfo.email}</h2>}
+      <ChatLayout/>
 
     </div>
   )

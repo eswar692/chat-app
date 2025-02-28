@@ -7,6 +7,7 @@ import {register_route} from '../utils/constant'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { toastError } from '@/utils/tosts'
+import { toast } from 'sonner'
 
 
 
@@ -68,19 +69,21 @@ const Auth = () => {
         if (loginField()){
        
           const api = await axios.post('http://localhost:3000/user/login',{email,password},{ withCredentials: true })
-          if(api.data.email){
+          if(api.status === 201){
             console.log(api.data)
-            toast.success('Login Successfully')
-            navigate('/chat')
+            toastError('incorrect Password and user Id try again',"green")
+            
+            setEmail('')
+           setPassword('') 
+           navigate('/chat') 
           }
-          setEmail('')
-          setPassword('')  
+          
         }
         
       } catch (error) {
         console.log(error)
         if(error){
-          toastError('incorrect Password and user Id try again')
+          toastError('incorrect Password and user Id try again',"red")
         }
       }
 
