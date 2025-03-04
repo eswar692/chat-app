@@ -61,8 +61,7 @@ const imageHandler = async(e)=>{
   const file = e.target.files[0]
   try {
     if(file){
-      const imageUrl = URL.createObjectURL(file)
-      
+      const imageUrl = URL.createObjectURL(file)   
       const formData = new FormData()
       formData.append('image',file)
       const response = await axios.post('http://localhost:3000/user/upload-image',formData,{withCredentials:true, headers: { "Content-Type": "multipart/form-data" },})
@@ -104,7 +103,7 @@ const deleteImage = async()=>{
                 onMouseLeave={()=>setHovered(false)}>
                     
               <Avatar className='w-36 h-36'>
-                {loading && <p>Loding</p>}
+               
               {
                 image
                 ?(

@@ -52,7 +52,7 @@ const Auth = () => {
        e.preventDefault();
 
       if (signup){
-        const api = await axios.post('http://localhost:3000/user/signup',{emailSignup,passwordsignup},{ withCredentials: true })
+        const api = await axios.post('http://localhost:3000/user/signup',{email:emailSignup,password:passwordsignup})
         console.log(api.data)
         if(api)
      

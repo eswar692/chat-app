@@ -1,4 +1,4 @@
-import React from 'react'
+import React ,{useState}from 'react'
 import Profile from './other/profile'
 import { Plus } from 'lucide-react'
 import {
@@ -16,9 +16,34 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from '@/components/ui/input'
+import { ScrollArea } from "@/components/ui/scroll-area"
+import axios from 'axios'
+
 
 
 const Contact = () => {
+  const [searchTerm,setSearchTerm] = useState('')
+  const [searchData,setSearchData] = useState([])
+
+  const searchHandler = async()=>{
+    console.log(searchTerm)
+    try {
+      if(searchTerm>0){
+      const response = await axios.post('http://localhost:3000/search/search-contact',{searchTerm},{withCredentials:true})
+        if(response.status==='201' && response.data.Contact){
+          setSearchData(response.data.Contact)
+        }
+      }else{
+        return
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  searchHandler()
+
+
   return (
     <div className='bg-[#2a2e2e] font-poppins w-screen  md:w-[30vw] h-[100vh] relative '>
 
@@ -49,10 +74,21 @@ const Contact = () => {
                 <DialogDescription>
                   <div className='h-[400px] grid grid-rows-[50px_auto]'>
                       <div className='h-full'>
-                        <Input type='text' placeholder='Search contact' className='border-none bg-black mt-3 h-12'/>  
+                        <Input type='text' placeholder='Search contact' className='border-none bg-black mt-3 h-12' value={searchTerm} onChange={(e)=>setSearchTerm(e.target.value)} />  
                       </div>
                       <div className=' flex items-center justify-center h-full text-white/50 font-poppins text-xl'>
-                        <h1>Welcome Pro Daddy Agency</h1>
+                        {!searchData.length && <h1>Welcome Pro Daddy Agency</h1>}
+                        {searchData.length && 
+                            <ScrollArea className="h-[200px] w-[350px] rounded-md border p-4">
+                            Jokester began sneaking into the castle in the middle of the night and leaving
+                            jokes all over the place: under the king's pillow, in his soup, even in the
+                            royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
+                            then, one day, the people of the kingdom discovered that the jokes left by
+                            Jokester were so funny that they couldn't help but laugh. And once they
+                            started laughing, they couldn't stop.
+                          </ScrollArea>
+                        }
+
                       </div>
                   </div>
                 </DialogDescription>
