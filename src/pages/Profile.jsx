@@ -17,9 +17,10 @@ const Profile = () => {
 
   const [firstName,setFirstName] = useState('')
   const [lastName,setLastName] = useState('')
-  const [image,setImage] = useState(null)
+  const [image,setImage] = useState(userInfo.image)
   const [hovered,setHovered] = useState(false)
   const [selectColor,setSelectColor] = useState(0)
+  const [loading,setLoading] = useState(false)
 
   const validateFilds = ()=>{
     if(!firstName){
@@ -60,10 +61,13 @@ const imageHandler = async(e)=>{
   const file = e.target.files[0]
   try {
     if(file){
+      const imageUrl = URL.createObjectURL(file)
+      
       const formData = new FormData()
       formData.append('image',file)
-      const response = await axios.post('http://localhost:3000/user/upload-image',{formData},{withCredentials:true})
+      const response = await axios.post('http://localhost:3000/user/upload-image',formData,{withCredentials:true, headers: { "Content-Type": "multipart/form-data" },})
       const data = response.data
+      setImage(imageUrl)
       console.log(data)
     }
   } catch (error) {
@@ -71,7 +75,9 @@ const imageHandler = async(e)=>{
   }
 }
 const deleteImage = async()=>{
+  
   alert('Do You want Delete Profile Image')
+  setImage('')
   const response = await axios.delete('http://localhost:3000/user/delete-profile-image',{withCredentials:true})
   const data = response.data
   console.log(data)
@@ -98,11 +104,12 @@ const deleteImage = async()=>{
                 onMouseLeave={()=>setHovered(false)}>
                     
               <Avatar className='w-36 h-36'>
+                {loading && <p>Loding</p>}
               {
-                userInfo.image
+                image
                 ?(
                   <AvatarImage 
-                  src={userInfo.image} 
+                  src={image} 
                   alt='profile pic'
                   className='w-full h-full rounded-full '
                   />
@@ -110,8 +117,8 @@ const deleteImage = async()=>{
                 :(
                   <div className={`overflow-hidden textuppercase w-full h-full text-[30px] rounded-full  flex items-center justify-center text-whit ${getColors(selectColor)} `}>
                     {firstName
-                    ? firstName.split('').shift()
-                    :userInfo.email.split('').shift()}
+                    ? firstName.charAt(0)
+                    :userInfo.email.charAt(0)}
                   </div>
                 )
 
@@ -121,7 +128,7 @@ const deleteImage = async()=>{
                
                 {hovered && (
                  <div className='w-20 h-20 bg-black/15 rounded-full flex justify-center items-center'>
-                   {(userInfo.image 
+                   {( image 
                     ? <Trash2 onClick={deleteImage} className='   text-white font-[5px]' /> 
                     :<Plus onClick={ClickImagePicker} className='   text-white font-[5px]'/>)}
                  </div>

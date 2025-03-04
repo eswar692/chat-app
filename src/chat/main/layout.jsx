@@ -1,13 +1,14 @@
 import React from 'react'
 import Contact from './contact'
+import DefualtMessage from './other/defualtMessage'
+import Message from './MessageComponent/message'
 
 const ChatLayout = () => {
   return (
-    <div>
-        <div className='flex w-full sm:w-[40vw] lg:w-[25vw] h-[100vh] bg-black/80'>
-            <Contact/>
-        </div>
-        <div className='flex '></div>
+    <div className='flex '>
+        <Contact/>
+        {/* <DefualtMessage/> */}
+        <Message hidden='hidden'/>
     </div>
   )
 }
