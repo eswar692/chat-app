@@ -3,7 +3,7 @@ import { CircleX } from 'lucide-react';
 
 export const toastError = (message,color)=>{
     return toast(message,{  
-        duration:30000,
+        duration:3000,
         icon:<CircleX/>,
         style:{
           backgroundColor:`${color}`,

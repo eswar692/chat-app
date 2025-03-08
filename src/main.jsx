@@ -6,6 +6,7 @@ import './App.css'
 import { Toaster } from '@/components/ui/sonner'
 import { Provider } from "react-redux";
 import {store} from'./srtores/strore'
+import { BrowserRouter } from 'react-router-dom'
 
 createRoot(document.getElementById('root')).render(
   

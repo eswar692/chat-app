@@ -32,7 +32,8 @@ const Profile = () => {
             const response = await axios.post('http://localhost:3000/user/logout',{},{withCredentials:true})
             console.log(response.data)
             if(response.status === 201){
-                return navigate('/auth')
+              navigate("/auth")
+              console.error('navigate trarvatha ')
             }
         } catch (error) {
             console.log(error)
@@ -66,7 +67,7 @@ const Profile = () => {
                      )
      
                    }
-     </Avatar> 
+        </Avatar> 
         </div>  
         <div className='w-3/5 h-full flex items-center'>
              {userInfo.firstName} {userInfo.lastName}
@@ -75,7 +76,7 @@ const Profile = () => {
 
      <div className='w-full h-full  flex justify-around items-center'>
        <div>
-            <button className=''>
+            <button onClick={navigateProfilePage}>
                     <Pencil/>
              </button>
        </div>

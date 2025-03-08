@@ -23,6 +23,7 @@ const Auth = () => {
 
     const [emailSignup, setEmailSignup] = useState('')
     const [passwordsignup, setPasswordsignup] = useState('')
+    
 
     const loginField = ()=>{
       
@@ -37,57 +38,73 @@ const Auth = () => {
       return true
     }
     const signup = ()=>{
+      const emailValidate =/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      const passwordValidate = /^(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{4,}$/
       
-      if(!emailSignup.length){
-        toast('email is required')
-        return false
+      if(!emailSignup.length || !emailSignup.match(emailValidate) ){
+        if(!emailSignup.length){
+          toast('email is required')
+          return false
+        }else{
+          toast.error("Please Enter valid email")
+          return false
+        }
+        
       }
-      if(!passwordsignup.length){
-        toast('password is required')
-        return false
+      if(!passwordsignup.length || !passwordsignup.match(passwordValidate)){
+        if(!passwordsignup.length){
+          toast('password is required')
+          return false
+        }else{
+          toast.error("password atleast 4 digita and one special character")
+          return false
+        }
+        
       }
       return true
     }
     const  signupHandler = async (e)=>{
        e.preventDefault();
 
-      if (signup){
-        const api = await axios.post('http://localhost:3000/user/signup',{email:emailSignup,password:passwordsignup})
-        console.log(api.data)
-        if(api)
-     
-        setEmailSignup('')
-        setPasswordsignup('')
-        navigate('/chat')
-
-      }
+      
+        if (signup()){
+          try {
+            const res = await axios.post('http://localhost:3000/user/signup',{email:emailSignup,password:passwordsignup},{withCredentials:true})
+            toastError('Login Successfully',"green")
+            setEmailSignup('')
+            setPasswordsignup('')
+            navigate('/chat')
+          } catch (error) {
+            toast.error(error?.response?.data.message || "internet error try again")
+            console.log(error)
+          }
+  
+        }
+        
+      
     }
 
     const loginHandler = async(e)=>{
-      e.preventDefault();
-      try {
+        e.preventDefault()
+      
         if (loginField()){
-       
-          const api = await axios.post('http://localhost:3000/user/login',{email,password},{ withCredentials: true })
-          if(api.status === 201){
-            console.log(api.data)
-            toastError('incorrect Password and user Id try again',"green")
-            
-            setEmail('')
-           setPassword('') 
-           navigate('/chat') 
-          }
+          // try {
           
+              const res = await axios.post('http://localhost:3000/user/login',{email,password},{withCredentials:true})
+              console.log(res.status)
+                 
+                    toastError('Login Successfully',"green")
+                    navigate("/chat") 
+                  
+              // } catch (error) {
+              //   toast(error?.response?.data.message || 'internet error')
+              // }
+ 
         }
-        
-      } catch (error) {
-        console.log(error)
-        if(error){
-          toastError('incorrect Password and user Id try again',"red")
-        }
-      }
+      }    
 
-    }
+
+    
 
     
     
@@ -111,7 +128,7 @@ const Auth = () => {
                 </TabsList>
                 <TabsContent value="login"
                 className="w-full    ">
-                        <form  className='flex h-full items-center justify-center flex-col sm:gap-10 gap-5 mt-5' >
+                        <form onSubmit={loginHandler}  className='flex h-full items-center justify-center flex-col sm:gap-10 gap-5 mt-5' >
                             <Input 
                             type="email" 
                             name='email'
@@ -128,7 +145,7 @@ const Auth = () => {
                             onChange={(e)=>{setPassword(e.target.value)}}
                             className=" w-[80%] h-[6vh] border-2 border-gray-400"/>
 
-                            <Button type='submit' onClick={loginHandler} className=" w-[80%] h-[6vh] ">Submit</Button>
+                            <Button type='submit'  className=" w-[80%] h-[6vh] ">Submit</Button>
                         </form>
                 </TabsContent>
                 <TabsContent 

@@ -61,12 +61,13 @@ const imageHandler = async(e)=>{
   const file = e.target.files[0]
   try {
     if(file){
-      const imageUrl = URL.createObjectURL(file)   
+      const imageUrl = URL.createObjectURL(file)
+      setImage(imageUrl)   
       const formData = new FormData()
       formData.append('image',file)
       const response = await axios.post('http://localhost:3000/user/upload-image',formData,{withCredentials:true, headers: { "Content-Type": "multipart/form-data" },})
       const data = response.data
-      setImage(imageUrl)
+      
       console.log(data)
     }
   } catch (error) {

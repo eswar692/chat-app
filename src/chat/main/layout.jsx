@@ -1,5 +1,5 @@
 import React from 'react'
-import Contact from './contact'
+import Contact from './contacts/Contact'
 import DefualtMessage from './other/defualtMessage'
 import Message from './MessageComponent/message'
 
