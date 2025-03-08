@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button'
 import {apiClient} from '../utils/api'
 import {register_route} from '../utils/constant'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+
 import { toastError } from '@/utils/tosts'
 import { toast } from 'sonner'
-
+import { Eye,EyeOff } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -16,14 +17,27 @@ import { toast } from 'sonner'
 
 
 const Auth = () => {
-    const navigate = useNavigate()
+   
+    const navigate = useNavigate();
 
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
 
     const [emailSignup, setEmailSignup] = useState('')
     const [passwordsignup, setPasswordsignup] = useState('')
-    
+    const [loginPassShow,setLoginPassShow] = useState(false)
+    const [signInPassShow,setSignInPassShow] = useState(false)
+
+    const goToChat = () => {
+     return window.location.href = '/chat';
+    };
+
+    const loginPasswordShow = ()=>{
+      return setLoginPassShow((prev)=>!prev)
+    }
+    const signupPasswordShow =()=>{
+      return setSignInPassShow((prev)=>!prev)
+    }
 
     const loginField = ()=>{
       
@@ -88,17 +102,19 @@ const Auth = () => {
         e.preventDefault()
       
         if (loginField()){
-          // try {
-          
-              const res = await axios.post('http://localhost:3000/user/login',{email,password},{withCredentials:true})
-              console.log(res.status)
-                 
-                    toastError('Login Successfully',"green")
-                    navigate("/chat") 
+             try {
+              
+                  const res = await axios.post('http://localhost:3000/user/login',{email,password},{withCredentials:true})
                   
-              // } catch (error) {
-              //   toast(error?.response?.data.message || 'internet error')
-              // }
+                    
+                    toastError('Login Successfully',"green")
+                    goToChat()
+                    console.log(goToChat())
+                    console.log(navigate('/chat'))
+                  
+              } catch (error) {
+                toast(error?.response?.data.message || 'internet error')
+              }
  
         }
       }    
@@ -130,20 +146,24 @@ const Auth = () => {
                 className="w-full    ">
                         <form onSubmit={loginHandler}  className='flex h-full items-center justify-center flex-col sm:gap-10 gap-5 mt-5' >
                             <Input 
-                            type="email" 
+                            type='text'
                             name='email'
                             autoComplete='email'
                             placeholder="Enter Email"
                             value={email}
                             onChange={(e)=>{setEmail(e.target.value)}}
                             className="w-[80%] h-[6vh] border-2 border-gray-400"/>
-                            <Input 
-                            type="password" 
-                           
-                            placeholder="Enter Password"
-                            value={password}
-                            onChange={(e)=>{setPassword(e.target.value)}}
-                            className=" w-[80%] h-[6vh] border-2 border-gray-400"/>
+                            <div className='w-[80%] rounded-lg flex justify-center items-center border-2 border-black/30 mx-3'>
+                              <Input 
+                              type={loginPassShow ? "text " :"password"} 
+                              placeholder="Enter Password"
+                              value={password}
+                              onChange={(e)=>{setPassword(e.target.value)}}
+                              className=" w-[80%] h-[6vh] border-none focus:!outline-none focus:!ring-0"/>
+                              <span>
+                                {loginPassShow ?<Eye onClick={loginPasswordShow} /> : <EyeOff onClick={loginPasswordShow} /> }
+                              </span>
+                            </div>
 
                             <Button type='submit'  className=" w-[80%] h-[6vh] ">Submit</Button>
                         </form>
@@ -168,12 +188,17 @@ const Auth = () => {
                             onChange={(e)=>{setEmailSignup(e.target.value)}}
                             className="w-[80%] h-[6vh] border-2 border-gray-400"/>
                             
-                            <Input 
-                            type="password" 
-                            placeholder="Enter Password"
-                            value={passwordsignup}
-                            onChange={(e)=>{setPasswordsignup(e.target.value)}}
-                            className=" w-[80%] h-[6vh] border-2 border-gray-400"/>
+                            <div className='w-[80%] rounded-lg flex justify-center items-center border-2 border-black/30 mx-3'>
+                              <Input 
+                              type={signInPassShow ? "text " :"password"} 
+                              placeholder="Enter Password"
+                              value={passwordsignup}
+                              onChange={(e)=>{setPasswordsignup(e.target.value)}}
+                              className=" w-[80%] h-[6vh] border-none focus:!outline-none focus:!ring-0"/>
+                              <span>
+                                {loginPassShow ?<Eye onClick={signupPasswordShow} /> : <EyeOff onClick={signupPasswordShow} /> }
+                              </span>
+                            </div>
 
                             <Button onClick={signupHandler} className=" w-[80%] h-[6vh] ">Submit</Button>
                         </form>

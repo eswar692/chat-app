@@ -32,8 +32,7 @@ const Profile = () => {
             const response = await axios.post('http://localhost:3000/user/logout',{},{withCredentials:true})
             console.log(response.data)
             if(response.status === 201){
-              navigate("/auth")
-              console.error('navigate trarvatha ')
+             window.location.href = '/chat'
             }
         } catch (error) {
             console.log(error)

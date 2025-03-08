@@ -78,7 +78,7 @@ const App = () => {
          <AuthRoutes>
           <Auth/>
          </AuthRoutes>
-      } />
+         } />
         <Route path='/chat' element={
           <ProfileRoutes>
             <Chat/>

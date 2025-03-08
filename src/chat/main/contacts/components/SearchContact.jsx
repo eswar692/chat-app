@@ -20,6 +20,7 @@ import axios from 'axios'
 import { Avatar,AvatarImage } from '@radix-ui/react-avatar'
 import { getColors } from '@/lib/utils'
 
+
 const SearchContact = () => {
     const [searchTerm,setSearchTerm] = useState('')
     const [searchData,setSearchData] = useState([])

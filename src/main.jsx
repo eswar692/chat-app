@@ -15,9 +15,7 @@ createRoot(document.getElementById('root')).render(
 
     <Provider store={store}>
       <App/>
-    </Provider>
-    
-    <Toaster  title
+      <Toaster  title
       theme="light"
       position="top-right"
       toastOptions={{
@@ -28,7 +26,10 @@ createRoot(document.getElementById('root')).render(
           // closeButton: "",
         },
       }}
-    />
+      />
+    </Provider>
+    
+   
     
   </StrictMode>
   
