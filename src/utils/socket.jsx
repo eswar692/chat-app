@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
-import { useSelector, useDispatch } from "react-redux";
 import {addMessage} from '@/srtores/chat-slice'
+import { useSelector, useDispatch } from "react-redux";
+import { createSelector } from "reselect";
 
 const SocketContext = createContext(null);
 export const useSocket = ()=>{
@@ -9,11 +10,20 @@ export const useSocket = ()=>{
 }
 
 export const SocketProvider = ({ children }) => {
-    const { loading, userInfo, selectedChatType, selectedChatData } = useSelector((state) => ({
-        ...state.auth,
-        ...state.chat
-    }));
-    
+    const {loading, userInfo} = useSelector(state=>state.auth)
+    const selectChatProperties = createSelector(
+        (state) => state.chat,
+        (chat) => ({
+          selectedChatType: chat.selectedChatType,
+          selectedChatData: chat.selectedChatData,
+        })
+      );
+      
+      const { selectedChatType, selectedChatData } = useSelector(state=>state.chat);
+
+
+
+
 
     const socket = useSocket()
     const dispatch = useDispatch()
@@ -29,7 +39,7 @@ export const SocketProvider = ({ children }) => {
             socketRef.current.on("connect", () => console.log("✅ Socket Connected"));
             socketRef.current.on("disconnect", () => console.log("❌ Socket Disconnected"));
 
-            const recieveMessage = (message)=>{
+            const recieveMessage = (message)=>{ 
                 console.log(message)
                 console.log(selectedChatData)
                 console.log(selectedChatType)

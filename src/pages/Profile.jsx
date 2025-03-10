@@ -13,14 +13,14 @@ import {  useNavigate } from 'react-router-dom'
 const Profile = () => {
   const imageRef = useRef(null)
   const navigate = useNavigate()
-  const {loding,userInfo} = useSelector((state)=>state.auth)
+  const {loading,userInfo} = useSelector((state)=>state.auth)
 
   const [firstName,setFirstName] = useState('')
   const [lastName,setLastName] = useState('')
   const [image,setImage] = useState(userInfo.image)
   const [hovered,setHovered] = useState(false)
   const [selectColor,setSelectColor] = useState(0)
-  const [loading,setLoading] = useState(false)
+  // const [loading,setLoading] = useState(false)
 
   const validateFilds = ()=>{
     if(!firstName){
@@ -154,13 +154,14 @@ const deleteImage = async()=>{
                     <Input
                     name='email'
                     value ={userInfo.email}
-                    disabled
+                    disabled={true}
                     />
                   </div>
                   <div>
                     <Input
                     name='firstName'
                     type='text'
+                    disabled={userInfo.firstName? true : false}
                      value ={userInfo.firstName? userInfo.firstName :firstName}
                      onChange={(e)=>{setFirstName(e.target.value)}}
                     placeholder='First Name'
@@ -171,6 +172,7 @@ const deleteImage = async()=>{
                     <Input
                     name='lastName'
                     type='text'
+                    disabled={userInfo.lastName? true : false}
                      value ={userInfo.lastName ? userInfo.lastName : lastName}
                      onChange={(e)=>{setLastName(e.target.value)}}
                     placeholder='Last Name'
