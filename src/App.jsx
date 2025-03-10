@@ -10,6 +10,7 @@ import Loading from './my/Loding'
 import { useSelector,useDispatch } from 'react-redux'
 import { fetchUser } from './srtores/apiSlice'
 import Profile from './pages/Profile'
+import { SocketProvider } from './utils/socket'
 
 const ProfileRoutes = ({children})=>{
   const {userInfo,loading} = useSelector((state)=>state.auth)
@@ -52,7 +53,7 @@ const App = () => {
           dispatch(fetchUser())
     
         },[dispatch,location.pathname])   
-        console.log(userInfo)
+        //console.log(userInfo)
         
 
       
@@ -80,9 +81,12 @@ const App = () => {
          </AuthRoutes>
          } />
         <Route path='/chat' element={
-          <ProfileRoutes>
-            <Chat/>
-          </ProfileRoutes>
+          <SocketProvider>
+            <ProfileRoutes>
+             <Chat/>
+            </ProfileRoutes>
+          </SocketProvider>
+         
         } />
         <Route path='/profile' element={
           <ProfileRoutes>

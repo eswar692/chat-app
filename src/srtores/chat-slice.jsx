@@ -5,7 +5,7 @@ const chatSlice = createSlice({
     initialState: {
         selectedChatType : undefined ,
         selectedChatData : undefined,
-        selectedChatMessage : undefined,
+        selectedChatMessage : [],
     },
     reducers: {
         setSelectedChatType:(state,action)=>{
@@ -14,19 +14,37 @@ const chatSlice = createSlice({
         setSelectedChatData:(state,action)=>{
             state.selectedChatData= action.payload
         },
-        setSelectedChatMessage:(state,action)=>{
-            state.selectedChatMessage = action.payload
-        },
         closeChat:(state)=>{
             state.selectedChatType = undefined
             state.selectedChatData= undefined
-            state.selectedChatMessage = undefined
+            state.selectedChatMessage = []
 
+        },
+        addMessage:(state,action)=>{
+            // state.selectedChatMessage = [
+            //     ...state.selectedChatMessage,
+            //     {
+            //     ...action.payload,
+            //     recipient: state.selectedChatType==='channel' ? action.payload.recipient : action.payload.recipient._id,
+            //     sender: state.selectedChatType==='channel' ? action.payload.sender : action.payload.sender._id
+
+                
+           // }]
+            state.selectedChatMessage.push({
+                ...action.payload,
+                recipient: state.selectedChatType === 'channel'
+                    ? action.payload.recipient
+                    : action.payload.recipient._id,
+                sender: state.selectedChatType === 'channel'
+                    ? action.payload.sender
+                    : action.payload.sender._id
+            });
+            //state.selectedChatMessage.push('siva')
         }
 
     }
 
 })
 
-const {setSelectedChatType, setSelectedChatData, setSelectedChatMessage, closeChat} = chatSlice.actions
+export const {setSelectedChatType, setSelectedChatData, setSelectedChatMessage, closeChat, addMessage} = chatSlice.actions
 export default chatSlice.reducer

@@ -82,9 +82,9 @@ const Profile = () => {
         <div>
             <AlertDialog className=''>
                 <AlertDialogTrigger asChild>
-                <button className='text-red-500 ' >
-                    <Power/>
-                </button>
+                
+                    <Power className='text-red-500 '/>
+                
                 </AlertDialogTrigger>
                 
                    <AlertDialogOverlay className='bg-black/50'/>

@@ -1,5 +1,5 @@
-import React,{useState,useEffect} from 'react'
-import { Plus } from 'lucide-react'
+import React,{useState,useEffect,useRef} from 'react'
+import { FastForward, Plus } from 'lucide-react'
 import {
   Tooltip,
   TooltipContent,
@@ -19,17 +19,31 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import axios from 'axios'
 import { Avatar,AvatarImage } from '@radix-ui/react-avatar'
 import { getColors } from '@/lib/utils'
+import { useDispatch,useSelector } from 'react-redux'
+import {setSelectedChatType, setSelectedChatData} from '@/srtores/chat-slice'
 
 
 const SearchContact = () => {
+    const dispatch = useDispatch()
+    const {selectedChatType,selectedChatData,} = useSelector((state)=>state.chat)
+    console.log("sulla",selectedChatData, selectedChatType)
+
     const [searchTerm,setSearchTerm] = useState('')
     const [searchData,setSearchData] = useState([])
+    // const [contactTabToggle,setContactTabToggle] = useState(false) 
+    const [isOpen, setIsOpen] = useState(false);
+
+    const contactHandler = ()=>{
+      setIsOpen(prev =>!prev)
+    }
+      
+    
     
       
       useEffect(()=>{
         const searchRoute =async()=>{
-          console.log('aerch api fun start')
-          console.log(searchTerm.length)
+          //console.log('aerch api fun start')
+          //console.log(searchTerm.length)
          
 
             if(searchTerm.length === 0){
@@ -38,39 +52,60 @@ const SearchContact = () => {
               const res = await axios.post('http://localhost:3000/search/search-contacts',{searchTerm},{withCredentials:true})
               if(res.status===201){
                 setSearchData(res.data.contacts)
-                console.log(searchData)
+                //console.log(searchData)
               }else{
                 setSearchData('')
               }
            
             }
           } 
+          
+        
+          
         
         const timer = setTimeout(searchRoute,500)
         return ()=>clearTimeout(timer)
       },[searchTerm])
 
+      const contactClick = (contact)=>{
+       if(contact){
+        dispatch(setSelectedChatType('contact'))
+        dispatch(setSelectedChatData(contact)) 
+        setSearchTerm('')
+        setIsOpen(false)
+        // console.log('hi sulllllllllli',)
+
+       }
+
+      
+      }
+
+
 
 
   return (
     <div>
-       <Dialog >
+
+        <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+          <Plus className='w-6 h-6 text-white' onClick={contactHandler}/>      
+          </TooltipTrigger>
+          <TooltipContent side='top'  className='border-[1px] border-white rounded translate-x-[-30px]'>
+            <p>New Contacts</p>
+          </TooltipContent>
+        </Tooltip>
+          </TooltipProvider>
+
+       <Dialog onOpenChange={setIsOpen} open={isOpen}>
             <DialogTrigger>
-              <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                <Plus className='w-6 h-6 text-white'/>      
-                </TooltipTrigger>
-                <TooltipContent side='top'  className='border-[1px] border-white rounded translate-x-[-30px]'>
-                  <p>New Contacts</p>
-                </TooltipContent>
-              </Tooltip>
-               </TooltipProvider>
+              
             </DialogTrigger>
             <DialogContent className='w-[80vw] bg-[#212121] border-none text-white top-[40vh]  md:left-[300px] rounded'>
-              {/* <DialogHeader>
-                <DialogTitle>Are you absolutely sure?</DialogTitle>
-              </DialogHeader> */}
+              <DialogHeader>
+                <DialogTitle>Search Contacts</DialogTitle>
+                <DialogDescription></DialogDescription>
+              </DialogHeader>
                 
                   <div className='h-[400px] grid grid-rows-[50px_auto]'>
                       <div className='h-full'>
@@ -83,15 +118,15 @@ const SearchContact = () => {
                           </div>
                         }
                         {searchData.length>=1 && 
-                            <ScrollArea className="h-[200px] w-[350px] rounded-md border-none  p-4">
+                            <ScrollArea className="h-full w-full rounded-md border-none  p-4 scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
                               
                                <div className='flex flex-col gap-5'>
                                   {
                                       searchData.map((item,index)=>{
                                         return(
-                                          <div key={item._id} className='flex flex-col gap-5'>
+                                          <div  className='flex flex-col gap-5 ' key={item._id}>
                                             {
-                                            <div className='flex '>
+                                            <div  className='flex cursor-pointer' onClick={()=>contactClick(item)} >
                                               <Avatar className=''>
                       
                                                 {

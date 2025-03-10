@@ -2,9 +2,20 @@ import { Input } from '@/components/ui/input'
 import { Paperclip, SendHorizontal, SmilePlus } from 'lucide-react'
 import React ,{useState,useEffect,useRef} from 'react'
 import EmojiPicker from 'emoji-picker-react'
+import { useSocket } from '@/utils/socket'
+import { useSelector,useDispatch } from 'react-redux'
+
 
 const MessageBar = () => {
-    const [Message,setMessage] = useState('')
+
+    const socket = useSocket()
+    const { loading, userInfo, selectedChatType, selectedChatData } = useSelector((state) => ({
+      ...state.auth,
+      ...state.chat
+    }));
+
+
+    const [message,setMessage] = useState('')
     const [emoji,setEmoji] = useState(false)
     const emojiRef = useRef(null)
     const emojiToggleRef = useRef(null)
@@ -18,9 +29,9 @@ const MessageBar = () => {
 
 
       const handleClickOutside = (event) => {
-        console.log('function call ayindi bro')
+       // console.log('function call ayindi bro')
         if (emojiRef.current && !emojiRef.current.contains(event.target) && emojiToggleRef.current && !emojiToggleRef.current.contains(event.target)) {
-          console.log('ref next ki vacha')
+         // console.log('ref next ki vacha')
           setEmoji(false);
         }
       };
@@ -38,17 +49,25 @@ const MessageBar = () => {
     }
 
     const messageHandler = async()=>{
-        console.log(Message)
+        if(selectedChatType === 'contact'){
+          socket.emit('sendMessage',{
+            sender:userInfo.id,
+            recipient:selectedChatData._id,
+            messageType:"text",
+            content:message,
+            fileUrl:undefined
+          })
+        }
 
         setMessage('')
     }
 
   return (
-    <div className=' flex mx-[80px] relative'>
+    <div className=' flex justify-center relative'>
       <div className='flex'>
         <input
          name='message'
-         value={Message}
+         value={message}
          onChange={(e)=>setMessage(e.target.value)}
          placeholder='Enter Message'
          className='rounded-l-md h-12 w-60 bg-[#515050] border-none focus:text-white focus:outline-none focus:p-5 placeholder:p-5 placeholder:text-white/50 placeholder:font-poppins' />
@@ -60,7 +79,9 @@ const MessageBar = () => {
         <SendHorizontal className='text-white  w-8 h-7 ' />
         </button>
         <div className='absolute bottom-16 left-[100px]' ref={emojiRef}>
-          <EmojiPicker  theme='dark' onEmojiClick={handleEmojiClick} open={emoji} autoFocusSearch={true}/>
+          <EmojiPicker  theme='dark' onEmojiClick={handleEmojiClick} open={emoji} autoFocusSearch={true}/> 
+          {/* autoFocusSearch == ante direct open ayaka seearch pi ki pothundi 
+          onEmojiClick == selecte chesina emoji ni fun lo pettdaniki*/}
 
         </div>
       </div>
