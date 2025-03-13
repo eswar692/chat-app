@@ -2,3 +2,8 @@
     @apply data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-b-blue-300 
                     data-[state=active]:rounded-none mt-3
 }
+@media (min-width: 768px) {  /* md screen (768px nunchi) */
+    .emoji-picker {
+      width: 600px !important;
+    }
+}

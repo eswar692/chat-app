@@ -5,31 +5,36 @@ import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "reselect";
 
 const SocketContext = createContext(null);
-export const useSocket = ()=>{
+const useSocket = () => {
+    const socket = useContext(SocketContext);
     return useContext(SocketContext)
-}
+    
+};
+
 
 export const SocketProvider = ({ children }) => {
+    const socketRef = useRef(null)
+
     const {loading, userInfo} = useSelector(state=>state.auth)
-    const selectChatProperties = createSelector(
-        (state) => state.chat,
-        (chat) => ({
-          selectedChatType: chat.selectedChatType,
-          selectedChatData: chat.selectedChatData,
-        })
-      );
+    // const selectChatProperties = createSelector(
+    //     (state) => state.chat,
+    //     (chat) => ({
+    //       selectedChatType: chat.selectedChatType,
+    //       selectedChatData: chat.selectedChatData,
+    //     })
+    //   );
       
       const { selectedChatType, selectedChatData } = useSelector(state=>state.chat);
+      
 
 
 
 
 
-    const socket = useSocket()
+    // const socket = useSocket()
     const dispatch = useDispatch()
     
 
-    const socketRef = useRef(null)
     useEffect(() => {
         if(!loading && userInfo){
             socketRef.current = io("http://localhost:3000", {
@@ -39,21 +44,23 @@ export const SocketProvider = ({ children }) => {
             socketRef.current.on("connect", () => console.log("✅ Socket Connected"));
             socketRef.current.on("disconnect", () => console.log("❌ Socket Disconnected"));
 
-            const recieveMessage = (message)=>{ 
-                console.log(message)
-                console.log(selectedChatData)
-                console.log(selectedChatType)
-               if(selectedChatType !== undefined && (selectedChatData._id === message.sender._id || selectedChatData._id === message.recipient._id)){
-                dispatch(addMessage(message))
-                console.log("hi modda")
-               }
+            // const recieveMessage = (message)=>{ 
+            //     console.log(message)
+            //     if(!selectedChatData) return;
+            //     console.log(selectedChatData)
+            //     console.log(selectedChatType)
+            //     console.log("hi modda")
+
+            //     dispatch(addMessage(message))
+               
                
 
-            }
+            // }
 
-            socketRef.current.on('recieveMessage',(message)=>{if(message){recieveMessage(message)}})
+            // socketRef.current.on('recieveMessage',recieveMessage)
+            console.log('socket')
+         return () => socketRef.current.disconnect();
 
-            return () => socketRef.current.disconnect();
         }
         
 
@@ -67,3 +74,8 @@ export const SocketProvider = ({ children }) => {
         </SocketContext.Provider>
     );
 }
+
+
+
+
+export default useSocket;

@@ -26,7 +26,7 @@ import {setSelectedChatType, setSelectedChatData} from '@/srtores/chat-slice'
 const SearchContact = () => {
     const dispatch = useDispatch()
     const {selectedChatType,selectedChatData,} = useSelector((state)=>state.chat)
-    console.log("sulla",selectedChatData, selectedChatType)
+    //console.log(selectedChatData, selectedChatType)
 
     const [searchTerm,setSearchTerm] = useState('')
     const [searchData,setSearchData] = useState([])

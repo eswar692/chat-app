@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { Provider } from "react-redux";
 import {store} from'./srtores/strore'
 import { BrowserRouter } from 'react-router-dom'
+import { SocketProvider } from './utils/socket'
 
 createRoot(document.getElementById('root')).render(
   
@@ -14,7 +15,13 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
 
     <Provider store={store}>
-      <App/>
+      <SocketProvider>
+        
+        <App/>
+
+        
+      </SocketProvider>
+     
       <Toaster  title
       theme="light"
       position="top-right"

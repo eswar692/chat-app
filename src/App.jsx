@@ -81,11 +81,11 @@ const App = () => {
          </AuthRoutes>
          } />
         <Route path='/chat' element={
-          <SocketProvider>
+        
             <ProfileRoutes>
              <Chat/>
             </ProfileRoutes>
-          </SocketProvider>
+          
          
         } />
         <Route path='/profile' element={
