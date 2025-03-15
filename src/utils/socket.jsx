@@ -70,7 +70,8 @@ export const SocketProvider = ({ children }) => {
                 console.log('📩 Received Message:', message);
 
                 // 🔥 Latest Redux state ni ikada use chestunnam
-                if (selectedChatType) {
+                if (selectedChatType && selectedChatData._id === message.recipient || selectedChatData._id === message.sender) {
+                    
                     console.log('✅ Message Matches Current Chat');
                     dispatch(addMessage(message));
                 } else {
