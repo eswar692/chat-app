@@ -21,9 +21,12 @@ import { Avatar,AvatarImage } from '@radix-ui/react-avatar'
 import { getColors } from '@/lib/utils'
 import { useDispatch,useSelector } from 'react-redux'
 import {setSelectedChatType, setSelectedChatData} from '@/srtores/chat-slice'
+import useSocket from '@/utils/socket'
 
 
 const SearchContact = () => {
+  const socket = useSocket()
+  //console.log(socket)
     const dispatch = useDispatch()
     const {selectedChatType,selectedChatData,} = useSelector((state)=>state.chat)
     //console.log(selectedChatData, selectedChatType)

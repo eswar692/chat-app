@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input'
 import { Paperclip, SendHorizontal, SmilePlus } from 'lucide-react'
-import React ,{useState,useEffect,useRef} from 'react'
+import React ,{useState,useEffect,useRef, useCallback} from 'react'
 import EmojiPicker from 'emoji-picker-react'
 import  useSocket  from '@/utils/socket'
 import { useSelector,useDispatch } from 'react-redux'
@@ -52,11 +52,12 @@ const MessageBar = () => {
     }
 
     const messageHandler = (e)=>{
-      
+      e.preventDefault()
       // console.log('start')
       //console.log(selectedChatData)
-        if(selectedChatType === 'contact'){
+        if(socket?.connected && selectedChatType === 'contact' && selectedChatData){
          
+          
           // console.log('start 2.0')
           socket.emit('sendMessage',{
             sender:userInfo.id,
@@ -66,30 +67,15 @@ const MessageBar = () => {
             fileUrl:undefined
           })
         setMessage('')
-          return true
+          
           
 
         }
-        return false
+        
         
     }
     
-      
-     if(messageHandler()){
-      const recieveMessage = (message)=>{ 
-        console.log(message)
-        if(!selectedChatData) return;
-        console.log(selectedChatData)
-        console.log(selectedChatType)
-        console.log("hi modda")
-
-        dispatch(addMessage(message))
-       
-       
-
-    }
-      socket.current.on('recieveMessage',recieveMessage)
-     }
+    
 
    
 
@@ -109,7 +95,7 @@ const MessageBar = () => {
         <SmilePlus className='text-white' ref={emojiToggleRef} onClick={()=>setEmoji((prev)=>!prev)} />
         <Paperclip className='text-white' />
         </button>
-        <button onClick={()=>messageHandler()} className='bg-purple-700 ml-4 w-[50px] h-12 rounded-md flex items-center justify-center hover:bg-purple-500 transition-all duration-75'>
+        <button onClick={(e)=>messageHandler(e)} className='bg-purple-700 ml-4 w-[50px] h-12 rounded-md flex items-center justify-center hover:bg-purple-500 transition-all duration-75'>
         <SendHorizontal className='text-white  w-8 h-7 ' />
         </button>
         <div className='absolute bottom-16 ' ref={emojiRef}>
