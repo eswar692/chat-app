@@ -5,7 +5,15 @@ import dayjs from "dayjs";
 
 
 const MessageContainer = () => {
+  const ref = useRef(null)
   const {selectedChatType,selectedChatMessage, selectedChatData} = useSelector(state => state.chat)
+
+  useEffect(()=>{
+    if(ref.current){
+      ref.current?.scrollIntoView({ behavior: "smooth"});
+
+    }
+  },[selectedChatMessage])
 
 
   const renderMessages = ()=>{
@@ -26,13 +34,15 @@ const MessageContainer = () => {
           </div>)}
             <div>
               {selectedChatType === 'contact' && (
-                <div className={`${selectedChatData._id !== message.sender ? "w-full flex justify-end" : " w-full flex justify-start" }`}>
-                  <div className='max-w-[50%] bg-[#222222] px-3 py-2 min-w-[50px] m-3 '>
+                <div className={`${ message.sender === selectedChatData._id ? "w-full flex justify-start" : " w-full flex justify-end" }`}>
+                  <div className='max-w-[50%]  bg-[#222222] px-3 py-2 min-w-[60px] m-3 '>
                   {message.content}
                   </div>
                 </div>
               )}
             </div>
+
+            
 
         </div>
       
@@ -45,7 +55,7 @@ const MessageContainer = () => {
   return (
     <div className='h-[80vh] overflow-y-auto text-white '>
       {renderMessages()}
-      
+      <div ref={ref} />
     </div>
   )
 }
