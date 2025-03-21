@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Auth = () => {
+  const API = import.meta.env.VITE_backend_url;
    
     const navigate = useNavigate();
 
@@ -83,7 +84,7 @@ const Auth = () => {
       
         if (signup()){
           try {
-            const res = await axios.post('http://localhost:3000/user/signup',{email:emailSignup,password:passwordsignup},{withCredentials:true})
+            const res = await axios.post(`${API}user/signup`,{email:emailSignup,password:passwordsignup},{withCredentials:true})
             toastError('Login Successfully',"green")
             setEmailSignup('')
             setPasswordsignup('')
@@ -104,7 +105,7 @@ const Auth = () => {
         if (loginField()){
              try {
               
-                  const res = await axios.post('http://localhost:3000/user/login',{email,password},{withCredentials:true})
+                  const res = await axios.post(`${API}user/login`,{email,password},{withCredentials:true})
                   
                     
                     toastError('Login Successfully',"green")

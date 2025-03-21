@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
-import {addMessage} from '@/srtores/chat-slice'
+import {addMessage, setContactLatest} from '@/srtores/chat-slice'
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "reselect";
 
@@ -13,25 +13,25 @@ const useSocket = () => {
 
 
 export const SocketProvider = ({ children }) => {
-
+    const API = import.meta.env.VITE_backend_url
     const socketRef = useRef(null)
 
     const {loading, userInfo} = useSelector(state=>state.auth)
-    console.log(socketRef,"happi holli")
+    //console.log(socketRef,"happi holli")
     
     const dispatch = useDispatch()
     
     const {selectedChatData,selectedChatType} = useSelector(state=>state.chat)
 
     useEffect(() => {
-        console.log("Before Connection:", socketRef.current); // Check this
+      //  console.log("Before Connection:", socketRef.current); // Check this
         if(!loading && userInfo){
             socketRef.current = io("http://localhost:3000", {
                 withCredentials: true,
-                transports: ['websocket'],
+                transports: ["websocket"],
                 query: { userId: userInfo.id }
             });
-    console.log(socketRef.current,"happi pongal")
+    //console.log(socketRef.current,"happi pongal")
 
             socketRef.current.on("connect", () => console.log("✅ Socket Connected"));
             socketRef.current.on("disconnect", () => console.log("❌ Socket Disconnected"));
@@ -50,7 +50,7 @@ export const SocketProvider = ({ children }) => {
             // }
 
             // socketRef.current.on('recieveMessage',recieveMessage)
-            console.log('socket')
+            //console.log('socket')
          return () => {
            // socketRef.current.off('receiveMessage', recieveMessage);
             socketRef.current.disconnect();
@@ -65,21 +65,28 @@ export const SocketProvider = ({ children }) => {
 
     useEffect(() => {
         if (socketRef.current) {
-            console.log('emi ra upayegam')
+           // console.log('emi ra upayegam')
             const receiveMessage = (message) => {
                 console.log('📩 Received Message:', message);
 
                 // 🔥 Latest Redux state ni ikada use chestunnam
-                if (selectedChatType && selectedChatData._id === message.recipient || selectedChatData._id === message.sender) {
+                if (selectedChatType &&  selectedChatData?._id === message.sender) {
                     
-                    console.log('✅ Message Matches Current Chat');
+                              dispatch(setContactLatest({contactInfo:selectedChatData}))
+                   // console.log('✅ Message Matches Current Chat');
                     dispatch(addMessage(message));
                 } else {
                     console.log('❌ Message Does Not Match Current Chat');
                 }
+                
             };
+            
+            const sendContact = (contact)=>{
+                console.log(contact)
+            }
 
             socketRef.current.on('recieveMessage', receiveMessage);
+            socketRef.current.on('recieveContact',sendContact )
 
             return () => {
                 socketRef.current.off('receiveMessage', receiveMessage);

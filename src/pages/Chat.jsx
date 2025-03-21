@@ -20,7 +20,7 @@ const Chat = ()=>{
   return(
     <div>
       
-      {loading && <h2>best loading......</h2>}
+      
       <ChatLayout/>
 
     </div>

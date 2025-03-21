@@ -13,6 +13,7 @@ const Loding = () => {
       loop={true}
       autoplay={true}
       speed={5}
+      style={{width:'350px', height:'350px'}}
      />
 
     </div>

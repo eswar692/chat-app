@@ -8,6 +8,7 @@ import { closeChat } from '@/srtores/chat-slice'
 const ChatLayout = () => {
   const isMobile = useMediaQuery("(max-width: 768px)")
   const {selectedChatType,selectedChatData} = useSelector(state=>state.chat)
+  
 
   return (
     <div className=' md:flex '>

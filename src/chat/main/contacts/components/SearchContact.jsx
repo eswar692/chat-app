@@ -20,11 +20,12 @@ import axios from 'axios'
 import { Avatar,AvatarImage } from '@radix-ui/react-avatar'
 import { getColors } from '@/lib/utils'
 import { useDispatch,useSelector } from 'react-redux'
-import {setSelectedChatType, setSelectedChatData} from '@/srtores/chat-slice'
+import {setSelectedChatType, setSelectedChatData, setActive} from '@/srtores/chat-slice'
 import useSocket from '@/utils/socket'
 
 
 const SearchContact = () => {
+  const API = import.meta.env.VITE_backend_url
   const socket = useSocket()
   //console.log(socket)
     const dispatch = useDispatch()
@@ -52,7 +53,7 @@ const SearchContact = () => {
             if(searchTerm.length === 0){
               setSearchData('')
             } else {
-              const res = await axios.post('http://localhost:3000/search/search-contacts',{searchTerm},{withCredentials:true})
+              const res = await axios.post(`${API}search/search-contacts`,{searchTerm},{withCredentials:true})
               if(res.status===201){
                 setSearchData(res.data.contacts)
                 //console.log(searchData)
@@ -79,7 +80,7 @@ const SearchContact = () => {
         // console.log('hi sulllllllllli',)
 
        }
-
+       dispatch(setActive(selectedChatData._id))
       
       }
 

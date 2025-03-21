@@ -5,13 +5,16 @@ import EmojiPicker from 'emoji-picker-react'
 import  useSocket  from '@/utils/socket'
 import { useSelector,useDispatch } from 'react-redux'
 import { Button } from '@/components/ui/button'
-import { addMessage } from '@/srtores/chat-slice'
+import { addMessage, setContactLatest } from '@/srtores/chat-slice'
+import axios from 'axios'
 
 
 const MessageBar = () => {
-
+    const API = import.meta.env.VITE_backend_url 
+    const fileRef = useRef(null) 
     const socket = useSocket()
-    console.log(socket)
+    //console.log(socket)
+    const dispatch = useDispatch()
    
     const {selectedChatType, selectedChatData} = useSelector(state=>state.chat)
     const {loading, userInfo} = useSelector(state=>state.auth)
@@ -28,7 +31,7 @@ const MessageBar = () => {
       //     setEmoji(false)
       //   },3000)
       // }
-    console.log(selectedChatData,selectedChatType)
+    //console.log(selectedChatData,selectedChatType)
 
 
       const handleClickOutside = (event) => {
@@ -58,14 +61,22 @@ const MessageBar = () => {
         if(socket?.connected && selectedChatType === 'contact' && selectedChatData){
          
           
-          // console.log('start 2.0')
-          socket.emit('sendMessage',{
-            sender:userInfo.id,
-            recipient:selectedChatData._id,
-            messageType:"text",
-            content:message,
-            fileUrl:undefined
-          })
+          dispatch(setContactLatest({contactInfo:selectedChatData}))
+          socket.emit(
+            'sendMessage',
+            {
+              sender: userInfo.id,
+              recipient: selectedChatData._id,
+              messageType: 'text',
+              content: message,
+              fileUrl: undefined,
+            },
+            (response) => {
+              // Response vachaka dispatch call cheyyadam
+              dispatch(addMessage(response));
+            }
+          );
+          
         setMessage('')
           
           
@@ -73,6 +84,32 @@ const MessageBar = () => {
         }
         
         
+    }
+
+    const filePickerOpenInFileMessage = ()=>{
+      console.log('helloi 1')
+      if (fileRef.current){
+        fileRef.current.click()
+      }
+
+    }
+    const fileMessageHandler = async(e)=>{
+      console.log('helloi 2')
+      const file = e.target.files[0]
+      console.log(file)
+      if(file){
+        try {
+            const formData = new FormData()
+          formData.append('file',file)
+          const response = await axios.post(`${API}message/file-image`, formData, {withCredentials:true})
+          console.log(response.data?.file.fileUrl)
+        } catch (error) {
+          console.log(error)
+        }
+      }else{
+        console.log('no file')
+      }
+
     }
     
     
@@ -84,18 +121,26 @@ const MessageBar = () => {
   return (
     <div className=' flex justify-center  bg-[#000000]  h-[10vh] items-center'>
       <div className='flex'>
-        <input
-         name='message'
-         value={message}
-         onChange={(e)=>setMessage(e.target.value)}
-         placeholder='Enter Message'
-          // onKeyDown={(e)=>{if(e.key === 'Enter'){messageHandler}}}
-         className='rounded-l-md h-12 w-60 bg-[#373737] border-none focus:text-white focus:outline-none focus:p-5 placeholder:p-5 placeholder:text-white/50 placeholder:font-poppins' />
-        <button className='p-2 flex h-12 items-center gap-3 bg-[#373737] rounded-r-md'> 
-        <SmilePlus className='text-white' ref={emojiToggleRef} onClick={()=>setEmoji((prev)=>!prev)} />
-        <Paperclip className='text-white' />
-        </button>
-        <button onClick={(e)=>messageHandler(e)} className='bg-purple-700 ml-4 w-[50px] h-12 rounded-md flex items-center justify-center hover:bg-purple-500 transition-all duration-75'>
+        <div className='flex  rounded bg-[#373737] p-[3px]'>
+            <input
+            name='message'
+            value={message}
+            onChange={(e)=>setMessage(e.target.value)}
+            onKeyDown={e=>{if(e.key === 'Enter'){messageHandler(e)}}}
+            placeholder='Enter Message'
+              // onKeyDown={(e)=>{if(e.key === 'Enter'){messageHandler}}}
+            className='rounded-l-md h-12 w-60 bg-[#373737] border-none focus:text-white focus:outline-none focus:p-5 placeholder:p-5 placeholder:text-white/50 placeholder:font-poppins' />
+            <button className='p-2 flex h-12 items-center gap-3 bg-[#373737] rounded-r-md'> 
+            <SmilePlus className='text-white' ref={emojiToggleRef} onClick={()=>setEmoji((prev)=>!prev)} />
+            
+            </button>
+            <button className='' onClick={()=>filePickerOpenInFileMessage()} >
+            <Paperclip className='text-white' />
+            </button>
+            <input type='file' className='hidden' name='file' ref={fileRef} onChange={fileMessageHandler} accept=".jpg,  .png, .jpeg, .webp"/>
+        </div>
+
+        <button onClick={()=>messageHandler()} className='bg-purple-700 ml-4 w-[50px] h-12 rounded-md flex items-center justify-center hover:bg-purple-500 transition-all duration-75'>
         <SendHorizontal className='text-white  w-8 h-7 ' />
         </button>
         <div className='absolute bottom-16 ' ref={emojiRef}>

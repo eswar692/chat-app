@@ -1,6 +1,7 @@
 import React ,{useState}from 'react'
 import Profile from './components/profile'
 import SearchContact from './components/SearchContact'
+import DM from './components/DM'
 
 
 
@@ -16,10 +17,13 @@ const Contact = () => {
             <h1 className='font-bold text-xl w-full text-center text-white'>Pro Daddy Agency</h1>      
         </div>
 
-        <div className='ml-5 mt-3 mb-2 grid grid-cols-[4fr_1fr]'>
+        <div className=' '>
+          <div className='grid grid-cols-[80%_20%] m-3'>
           <Text text="Direct messages" />
-           <SearchContact/>
+          <SearchContact/>
+          </div>
           
+          <DM/>
          
 
 
