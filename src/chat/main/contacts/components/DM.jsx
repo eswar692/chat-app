@@ -42,15 +42,22 @@ const DM = () => {
 
 
      const contactClick = (contact)=>{
-           if(contact){
-            dispatch(setSelectedChatType('contact'))
-            dispatch(setSelectedChatData(contact)) 
-           }
-           activeSelected()
+            if(contact){
+                dispatch(setSelectedChatType('contact'))
+                dispatch(setSelectedChatData(contact)) 
+                if(active === !contact._id){
+
+                    dispatch(setActive(selectedChatData._id))
+                }
+            }
+            
           }
 
-    const activeSelected = ()=>{
-        return dispatch(setActive(selectedChatData._id))
+    const activeSelected = (contact)=>{
+        if(active === !contact._id){
+
+            return dispatch(setActive(selectedChatData._id))
+        }
     }
   return (
     <div className='mt-3 text-white w-full'>

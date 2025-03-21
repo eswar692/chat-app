@@ -16,7 +16,7 @@ const MessageBar = () => {
     //console.log(socket)
     const dispatch = useDispatch()
    
-    const {selectedChatType, selectedChatData} = useSelector(state=>state.chat)
+    const {selectedChatType, selectedChatData, contact} = useSelector(state=>state.chat)
     const {loading, userInfo} = useSelector(state=>state.auth)
 
 
@@ -55,13 +55,16 @@ const MessageBar = () => {
     }
 
     const messageHandler = (e)=>{
-      e.preventDefault()
+         e.preventDefault()
       // console.log('start')
       //console.log(selectedChatData)
         if(socket?.connected && selectedChatType === 'contact' && selectedChatData){
+
+          const contactArrayInSeperateId = contact.map((item)=>item.contactInfo._id)
          
-          
-          dispatch(setContactLatest({contactInfo:selectedChatData}))
+          if(!contactArrayInSeperateId.includes(selectedChatData._id)){
+            dispatch(setContactLatest({contactInfo:selectedChatData}))
+          }
           socket.emit(
             'sendMessage',
             {
@@ -77,7 +80,7 @@ const MessageBar = () => {
             }
           );
           
-        setMessage('')
+           setMessage('')
           
           
 
@@ -140,7 +143,7 @@ const MessageBar = () => {
             <input type='file' className='hidden' name='file' ref={fileRef} onChange={fileMessageHandler} accept=".jpg,  .png, .jpeg, .webp"/>
         </div>
 
-        <button onClick={()=>messageHandler()} className='bg-purple-700 ml-4 w-[50px] h-12 rounded-md flex items-center justify-center hover:bg-purple-500 transition-all duration-75'>
+        <button onClick={(e)=>messageHandler(e)} className='bg-purple-700 ml-4 w-[50px] h-12 rounded-md flex items-center justify-center hover:bg-purple-500 transition-all duration-75'>
         <SendHorizontal className='text-white  w-8 h-7 ' />
         </button>
         <div className='absolute bottom-16 ' ref={emojiRef}>
