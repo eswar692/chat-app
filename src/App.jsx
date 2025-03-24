@@ -11,6 +11,7 @@ import { useSelector,useDispatch } from 'react-redux'
 import { fetchUser } from './srtores/apiSlice'
 import Profile from './pages/Profile'
 import { SocketProvider } from './utils/socket'
+import ChangePassword from './pages/password'
 
 const ProfileRoutes = ({children})=>{
   const {userInfo,loading} = useSelector((state)=>state.auth)
@@ -93,6 +94,11 @@ const App = () => {
             <Profile/>
           </ProfileRoutes>
         } />
+        <Route path='/password' element={
+          
+            <ChangePassword/>
+          
+        }/>
         <Route path='*' element={<Navigate to='/auth'/>} />
       </Routes>
     

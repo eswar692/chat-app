@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "reselect";
 
 const SocketContext = createContext(null);
+const API = import.meta.env.VITE_backend_url
 const useSocket = () => {
     const socket = useContext(SocketContext);
     return socket.current?.connected ? socket.current : null;
@@ -26,7 +27,7 @@ export const SocketProvider = ({ children }) => {
     useEffect(() => {
       //  console.log("Before Connection:", socketRef.current); // Check this
         if(!loading && userInfo){
-            socketRef.current = io("http://localhost:3000", {
+            socketRef.current = io(API, {
                 withCredentials: true,
                 transports: ["websocket"],
                 query: { userId: userInfo.id }
@@ -69,24 +70,19 @@ export const SocketProvider = ({ children }) => {
             const receiveMessage = (message) => {
                 console.log('📩 Received Message:', message);
 
-                // 🔥 Latest Redux state ni ikada use chestunnam
                 if (selectedChatType &&  selectedChatData?._id === message.sender) {
                     
                               dispatch(setContactLatest({contactInfo:selectedChatData}))
-                   // console.log('✅ Message Matches Current Chat');
                     dispatch(addMessage(message));
                 } else {
-                    console.log('❌ Message Does Not Match Current Chat');
+                    console.log('Message Does Not Match Current Chat');
                 }
                 
             };
             
-            const sendContact = (contact)=>{
-                console.log(contact)
-            }
+           
 
             socketRef.current.on('recieveMessage', receiveMessage);
-            socketRef.current.on('recieveContact',sendContact )
 
             return () => {
                 socketRef.current.off('receiveMessage', receiveMessage);

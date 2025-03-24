@@ -15,6 +15,7 @@ const MessageBar = () => {
     const socket = useSocket()
     //console.log(socket)
     const dispatch = useDispatch()
+    const [sendFile, setSendFile] = useState(null)
    
     const {selectedChatType, selectedChatData, contact} = useSelector(state=>state.chat)
     const {loading, userInfo} = useSelector(state=>state.auth)
@@ -65,18 +66,21 @@ const MessageBar = () => {
           if(!contactArrayInSeperateId.includes(selectedChatData._id)){
             dispatch(setContactLatest({contactInfo:selectedChatData}))
           }
+          const messageSend = {
+            sender: userInfo.id,
+            recipient: selectedChatData._id,
+            messageType: 'text',
+            content: message,
+            fileUrl: undefined,
+          }
+          dispatch(addMessage(messageSend));
           socket.emit(
             'sendMessage',
-            {
-              sender: userInfo.id,
-              recipient: selectedChatData._id,
-              messageType: 'text',
-              content: message,
-              fileUrl: undefined,
-            },
+            messageSend
+           ,
             (response) => {
-              // Response vachaka dispatch call cheyyadam
-              dispatch(addMessage(response));
+              // Response vachaka data ravadam call cheyyadam
+              
             }
           );
           
@@ -102,10 +106,35 @@ const MessageBar = () => {
       console.log(file)
       if(file){
         try {
+          const fileObectUrl = URL.createObjectURL(file)
+          setSendFile(fileObectUrl)
+          // if(sendFile){
+          //   const messageSend =  {
+          //     sender: userInfo.id,
+          //     recipient: selectedChatData._id,
+          //     messageType: 'file',
+          //     content: undefined,
+          //     fileUrl: sendFile ,
+          //     // fileUrlPublicId: response.data.file.publicId,
+          //   }
+          //   dispatch(addMessage(messageSend))
+          // }
             const formData = new FormData()
           formData.append('file',file)
           const response = await axios.post(`${API}message/file-image`, formData, {withCredentials:true})
           console.log(response.data?.file.fileUrl)
+          if(socket?.connected && selectedChatType === 'contact' && selectedChatData && response.data?.file.fileUrl){
+            const messageSend =  {
+              sender: userInfo.id,
+              recipient: selectedChatData._id,
+              messageType: 'file',
+              content: undefined,
+              fileUrl: response.data.file.fileUrl ,
+              fileUrlPublicId: response.data.file.publicId,
+            }
+            dispatch(addMessage(messageSend))
+            socket.emit('sendMessage', messageSend)
+          }
         } catch (error) {
           console.log(error)
         }
@@ -140,7 +169,7 @@ const MessageBar = () => {
             <button className='' onClick={()=>filePickerOpenInFileMessage()} >
             <Paperclip className='text-white' />
             </button>
-            <input type='file' className='hidden' name='file' ref={fileRef} onChange={fileMessageHandler} accept=".jpg,  .png, .jpeg, .webp"/>
+            <input type='file' className='hidden' name='file' ref={fileRef} onChange={fileMessageHandler} accept="image/png, image/webp,  image/jpeg, video/mp4, video/webm "/>
         </div>
 
         <button onClick={(e)=>messageHandler(e)} className='bg-purple-700 ml-4 w-[50px] h-12 rounded-md flex items-center justify-center hover:bg-purple-500 transition-all duration-75'>

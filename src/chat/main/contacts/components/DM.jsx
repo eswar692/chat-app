@@ -91,7 +91,9 @@ const DM = () => {
                             </Avatar> 
                             <div className='flex items-center'>
                             {
-                                    `${contact.contactInfo.firstName} ${contact.contactInfo.lastName}`
+                                (contact.contactInfo.firstName && contact.contactInfo.lastName)
+                                 ?  `${contact.contactInfo.firstName} ${contact.contactInfo.lastName}`
+                                 : contact.contactInfo.email
                              }
                             </div>
                                 

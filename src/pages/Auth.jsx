@@ -9,7 +9,7 @@ import axios from 'axios'
 import { toastError } from '@/utils/tosts'
 import { toast } from 'sonner'
 import { Eye,EyeOff } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
@@ -145,7 +145,8 @@ const Auth = () => {
                 </TabsList>
                 <TabsContent value="login"
                 className="w-full    ">
-                        <form onSubmit={loginHandler}  className='flex h-full items-center justify-center flex-col sm:gap-10 gap-5 mt-5' >
+                      <div>
+                        <form onSubmit={loginHandler}  className='flex h-full items-center justify-center flex-col sm:gap-5 gap-5 mt-5' >
                             <Input 
                             type='text'
                             name='email'
@@ -166,8 +167,16 @@ const Auth = () => {
                               </span>
                             </div>
 
+                            <div className='w-[80%] flex justify-end'>
+                              <Link to='/password'>
+                              <button className='underline text-blue-400'>forgot password</button>
+                              </Link>
+                            </div>
+
                             <Button type='submit'  className=" w-[80%] h-[6vh] ">Submit</Button>
                         </form>
+                        
+                      </div>
                 </TabsContent>
                 <TabsContent 
                 value="signin"
@@ -182,20 +191,22 @@ const Auth = () => {
                             onChange={(e)=>{setEmail(e.target.value)}}
                             className="w-[80%] sm:h-[6vh] h-[7vh] text-[13px] sm:border-2 border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"/> */}
                             
-                            <Input 
+                            <div className='w-[80%] h-[6vh] border-2 border-gray-400'>
+                              <Input 
                             type="email" 
                             placeholder="Enter Email"
                             value={emailSignup}
                             onChange={(e)=>{setEmailSignup(e.target.value)}}
-                            className="w-[80%] h-[6vh] border-2 border-gray-400"/>
+                            className="bg-transparent shadow-none focus:outline-none focus:"/>
+                            </div>
                             
-                            <div className='w-[80%] rounded-lg flex justify-center items-center border-2 border-black/30 mx-3'>
+                            <div className='w-[80%] rounded-lg flex  border-2 border-black/30 '>
                               <Input 
                               type={signInPassShow ? "text " :"password"} 
                               placeholder="Enter Password"
                               value={passwordsignup}
                               onChange={(e)=>{setPasswordsignup(e.target.value)}}
-                              className=" w-[80%] h-[6vh] border-none focus:!outline-none focus:!ring-0"/>
+                              className=" w-[100%] h-[6vh] border-none focus:!outline-none focus:!ring-0 "/>
                               <span>
                                 {loginPassShow ?<Eye onClick={signupPasswordShow} /> : <EyeOff onClick={signupPasswordShow} /> }
                               </span>

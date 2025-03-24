@@ -97,7 +97,7 @@ const Profile = () => {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                     <AlertDialogCancel className='border-2 border-white/60 bg-[#09090B] '>No</AlertDialogCancel>
-                    <AlertDialogAction onClick={logoutRoute} className='border-2 border-white/60 bg-white text-black' >Yes</AlertDialogAction>
+                    <AlertDialogAction onClick={logoutRoute} className='border-2 border-white/60 bg-white text-black hover:text-white' >Yes</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

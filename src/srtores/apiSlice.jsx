@@ -4,7 +4,8 @@ import axios from 'axios'
 // API Call Using createAsyncThunk
 export const fetchUser = createAsyncThunk("auth/fetchUser", async (_,rejectWithValue) => {
   try {
-    const response = await axios.get('http://localhost:3000/user/get-data-token',{ withCredentials: true })
+    const API = import.meta.env.VITE_backend_url
+    const response = await axios.get(`${API}user/get-data-token`,{ withCredentials: true })
     const data = response.data
   
     return data;

@@ -11,6 +11,7 @@ import {  useNavigate } from 'react-router-dom'
 
 
 const Profile = () => {
+  const API = import.meta.env.VITE_backend_url
   const imageRef = useRef(null)
   const navigate = useNavigate()
   const {loading,userInfo} = useSelector((state)=>state.auth)
@@ -39,7 +40,7 @@ const Profile = () => {
   const profileHandler = async()=>{
     try {
       if (validateFilds()){
-        const response  = await axios.put('http://localhost:3000/user/profile-update',{firstName,lastName,color:selectColor},{ withCredentials: true })
+        const response  = await axios.put(`${API}user/profile-update`,{firstName,lastName,color:selectColor},{ withCredentials: true })
         const data = response.data
         console.log(data)
           if(response.status===201 && response.data){
@@ -65,7 +66,7 @@ const imageHandler = async(e)=>{
       setImage(imageUrl)   
       const formData = new FormData()
       formData.append('image',file)
-      const response = await axios.post('http://localhost:3000/user/upload-image',formData,{withCredentials:true, headers: { "Content-Type": "multipart/form-data" },})
+      const response = await axios.post(`${API}user/upload-image`,formData,{withCredentials:true, headers: { "Content-Type": "multipart/form-data" },})
       const data = response.data
       
       console.log(data)
@@ -78,7 +79,7 @@ const deleteImage = async()=>{
   
   alert('Do You want Delete Profile Image')
   setImage('')
-  const response = await axios.delete('http://localhost:3000/user/delete-profile-image',{withCredentials:true})
+  const response = await axios.delete(`${API}user/delete-profile-image`,{withCredentials:true})
   const data = response.data
   console.log(data)
   
@@ -87,8 +88,10 @@ const deleteImage = async()=>{
   
     return (
     <div className='bg-[#292a36] h-[100vh]  flex sm:items-center sm:justify-center flex-col gap-5 text-white '>
-
-       <div className='flex flex-col gap w-[100vw] mt-[100px] sm:mt-[0] container '>
+        <div className=' flex justify-end pr-10 mt-10 w-full'>
+          <button onClick={()=>navigate('/password')}>Change Password</button>
+        </div>
+       <div className=' flex flex-col gap w-[100vw] mt-[20px] sm:mt-[0] container h-auto md:w-[70%] m-auto '>
           <div className='sm:mb-10'>
           <MoveLeft className='text-white ml-5 mt-5 cursor-pointer' onClick={redirectChat} />
 
@@ -103,7 +106,7 @@ const deleteImage = async()=>{
                 onMouseEnter={()=>setHovered(true)}
                 onMouseLeave={()=>setHovered(false)}>
                     
-              <Avatar className='w-36 h-36'>
+              <Avatar className='w-36 h-36 mb-10'>
                
               {
                 image
@@ -201,7 +204,8 @@ const deleteImage = async()=>{
                     }
                   </div>
                   <div>
-                  <Button 
+                  <Button disabled = {userInfo.firstName && userInfo.lastName ? true : false
+                  }
                   className='bg-purple-500 w-full mt-5 hover:bg-purple-600 transition-all duration-100'
                   onClick={profileHandler}
                   >
