@@ -22,7 +22,7 @@ export const SocketProvider = ({ children }) => {
     
     const dispatch = useDispatch()
     
-    const {selectedChatData,selectedChatType} = useSelector(state=>state.chat)
+    const {selectedChatData,selectedChatType, contact} = useSelector(state=>state.chat)
 
     useEffect(() => {
       //  console.log("Before Connection:", socketRef.current); // Check this
@@ -71,8 +71,12 @@ export const SocketProvider = ({ children }) => {
                 console.log('📩 Received Message:', message);
 
                 if (selectedChatType &&  selectedChatData?._id === message.sender) {
+
+                 const selectedIds = contact.map(item => item.contactInfo._id) 
+                    if(!selectedIds.includes(selectedChatData._id)){
+                    dispatch(setContactLatest({contactInfo:selectedChatData}))
+                    }
                     
-                              dispatch(setContactLatest({contactInfo:selectedChatData}))
                     dispatch(addMessage(message));
                 } else {
                     console.log('Message Does Not Match Current Chat');
